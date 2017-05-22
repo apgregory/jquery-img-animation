@@ -47,28 +47,6 @@
         return Flipbook;
     }());
 
-    Flipbook.prototype.init = function() {
-        var _ = this;
-
-        if (!_.$flipper && _.$initialFrame.is('img') && _.$initialFrame.attr('src')) {
-            _.nest();
-            _.animate();
-        }
-
-    };
-
-
-
-    Flipbook.prototype.nest = function() {
-        var _ = this;
-
-        _.$initialFrame.addClass('img-animation__initial-frame');
-        _.$initialFrame.wrap('<span class="img-animation__wrapper"></span>');
-        _.$flipper = _.$initialFrame.parent();
-    };
-
-
-
     Flipbook.prototype.animate = function() {
         var _ = this;
 
@@ -95,37 +73,6 @@
             _.options.initialDelay -= elapsed;
         } else {
             _.options.initialDelay = 0;
-        }
-    };
-
-    Flipbook.prototype.getImageSources = function(pre, post) {
-        var _ = this;
-
-        var splitRegExp = new RegExp('(?=\\' + _.options.imgDelimiter + ')', 'g');
-        var initialFrameSource = _.$initialFrame.attr('src').split(splitRegExp);
-        var imgPre = _.options.imgPre || initialFrameSource[0];
-        if (imgPre.slice(-2) === '-0') imgPre = imgPre.slice(0, -1);
-        var imgPost = _.options.imgPost || initialFrameSource[1] || '';
-
-        var imageSources = [];
-        for (var i = 1; i < _.options.frames; i++) {
-            imageSources.push(imgPre + i + imgPost);
-        }
-        return imageSources;
-    };
-
-    Flipbook.prototype.preload = function(images, callback) {
-        var _ = this;
-        if (!(images instanceof Array)) images = [images];
-        var loaded = [];
-        var addToLoaded = function() {
-            loaded.push(this);
-            if (loaded.length === images.length) callback();
-        };
-        for (var i = 0; i < images.length; i++) {
-            var img = new Image();
-            img.onload = addToLoaded;
-            img.src = images[i];
         }
     };
 
@@ -157,6 +104,55 @@
         }
     };
     
+    Flipbook.prototype.getImageSources = function(pre, post) {
+        var _ = this;
+
+        var splitRegExp = new RegExp('(?=\\' + _.options.imgDelimiter + ')', 'g');
+        var initialFrameSource = _.$initialFrame.attr('src').split(splitRegExp);
+        var imgPre = _.options.imgPre || initialFrameSource[0];
+        if (imgPre.slice(-2) === '-0') imgPre = imgPre.slice(0, -1);
+        var imgPost = _.options.imgPost || initialFrameSource[1] || '';
+
+        var imageSources = [];
+        for (var i = 1; i < _.options.frames; i++) {
+            imageSources.push(imgPre + i + imgPost);
+        }
+        return imageSources;
+    };
+
+    Flipbook.prototype.init = function() {
+        var _ = this;
+
+        if (!_.$flipper && _.$initialFrame.is('img') && _.$initialFrame.attr('src')) {
+            _.nest();
+            _.animate();
+        }
+
+    };
+
+    Flipbook.prototype.nest = function() {
+        var _ = this;
+
+        _.$initialFrame.addClass('img-animation__initial-frame');
+        _.$initialFrame.wrap('<span class="img-animation__wrapper"></span>');
+        _.$flipper = _.$initialFrame.parent();
+    };
+
+    Flipbook.prototype.preload = function(images, callback) {
+        var _ = this;
+        if (!(images instanceof Array)) images = [images];
+        var loaded = [];
+        var addToLoaded = function() {
+            loaded.push(this);
+            if (loaded.length === images.length) callback();
+        };
+        for (var i = 0; i < images.length; i++) {
+            var img = new Image();
+            img.onload = addToLoaded;
+            img.src = images[i];
+        }
+    };
+
     $.fn.flipbook = function() {
         var _ = this,
             opt = arguments[0],
