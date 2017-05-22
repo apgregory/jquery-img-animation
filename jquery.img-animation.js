@@ -62,8 +62,8 @@
     Flipbook.prototype.nest = function() {
         var _ = this;
 
-        _.$initialFrame.addClass('img-animation-initial-frame');
-        _.$initialFrame.wrap('<span class="img-animation-wrapper"></span>');
+        _.$initialFrame.addClass('img-animation__initial-frame');
+        _.$initialFrame.wrap('<span class="img-animation__wrapper"></span>');
         _.$flipper = _.$initialFrame.parent();
     };
 
@@ -75,7 +75,7 @@
         var imageSources = _.getImageSources();
         _.preload(imageSources, function() {
             for (var i = 0; i < imageSources.length; i++) {
-                _.$flipper.append('<img class="img-animation-frame" src="' + imageSources[i] + '">');
+                _.$flipper.append('<img class="img-animation__frame" src="' + imageSources[i] + '">');
             }
             _.calculateTiming();
             window.setTimeout(function() { _.flip(_); }, _.options.initialDelay);
@@ -132,7 +132,7 @@
     Flipbook.prototype.flip = function(context) {
         var _ = context;
 
-        var $activeFrame = _.$flipper.find('.img-animation-initial-frame, .active-frame').eq(-1);
+        var $activeFrame = _.$flipper.find('.img-animation__initial-frame, .active-frame').eq(-1);
         var $followingImage = $activeFrame.next();
         if ($followingImage.length) {
             $followingImage.fadeIn(_.options.fadeRate, function() {
