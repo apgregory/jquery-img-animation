@@ -1,10 +1,10 @@
-.flipbook-flipper {
+.img-animation-wrapper {
     position: relative;
     display: block;
     width: 100%;
 }
 
-.flipper-frame {
+.img-animation-frame {
     width: 100%;
     display: none;
     position: absolute;
@@ -12,7 +12,7 @@
     left: 0;
 }
 
-.initial-frame {
+.img-animation-initial-frame {
     width: 100%;
     display: block;
     position: static;
