@@ -30,7 +30,7 @@
                 cycles: 1,
                 imgPre: null,
                 imgPost: null,
-                imgDelimiter: '?'
+                imgDelimiter: null
             };
 
             _.initiated = new Date();
@@ -104,18 +104,30 @@
         }
     };
     
-    Flipbook.prototype.getImageSources = function(pre, post) {
+    Flipbook.prototype.getImageSources = function() {
         var _ = this;
+        
 
-        var splitRegExp = new RegExp('(?=\\' + _.options.imgDelimiter + ')', 'g');
-        var initialFrameSource = _.$initialFrame.attr('src').split(splitRegExp);
-        var imgPre = _.options.imgPre || initialFrameSource[0];
-        if (imgPre.slice(-2) === '-0') imgPre = imgPre.slice(0, -1);
-        var imgPost = _.options.imgPost || initialFrameSource[1] || '';
+        var initialFrameSource = _.$initialFrame.attr('src') || '';
+        var fileExtensionMatch = initialFrameSource.match(/\.([0-9a-z]+)(?:[\?#]|$)/i);
+        var initialDelimiter = fileExtensionMatch && fileExtensionMatch[0] || '?';
+        _.options.imgDelimiter = _.options.imgDelimiter || initialDelimiter;
+        var initialPre = initialFrameSource.split(_.options.imgDelimiter)[0];
+        var finalChar = parseInt(initialPre.slice(-1));
+        var imgCount = 0;
+        if (!isNaN(finalChar)) {
+            initialPre = initialPre.slice(0, -1);
+            imgCount = finalChar;
+        }
+        var initialPost = initialFrameSource.split(_.options.imgDelimiter)[1] || '';
+
+        _.options.imgPre = _.options.imgPre || initialPre;
+        _.options.imgPost = _.options.imgPost || initialPost;
 
         var imageSources = [];
         for (var i = 1; i < _.options.frames; i++) {
-            imageSources.push(imgPre + i + imgPost);
+            imgCount ++;
+            imageSources.push(_.options.imgPre + imgCount + _.options.imgDelimiter + _.options.imgPost);
         }
         return imageSources;
     };

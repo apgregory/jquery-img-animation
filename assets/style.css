@@ -1,0 +1,8 @@
+.foo {
+	width: 150px;
+	margin: 10px auto;
+}
+
+.foo__img {
+	width: 100%;
+}
